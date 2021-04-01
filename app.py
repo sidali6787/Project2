@@ -30,7 +30,8 @@ def home():
 
 @app.route('/api/v1.0/restaurantes')
 def get_data():
-    data = restaurantes.find({'City': 'Orlando '})
+    data = restaurantes.find()
+    # data = restaurantes.find({'City': 'Orlando '})
     #print(data)
     #df = pd.DataFrame(data).to_dict(orient='record')
     #print(df)
@@ -39,7 +40,6 @@ def get_data():
     for document in data:
         document['_id'] = str(document['_id'])
         data_list.append(document)
-        print(document)
     return Response(json.dumps(data_list), mimetype='application/json')
 
 if __name__=='__main__':
