@@ -1,11 +1,9 @@
 d3.json('/api/v1.0/restaurantes').then(data => {
-    console.log(data);
-
     showData(data);
     d3.selectAll('input').on('change', handleChange);
+    d3.select('button').on('click', handleClick);
 
     var filteredData = data;
-
 
     function showData(data) {
         d3.select('tbody').html('');
@@ -27,5 +25,60 @@ d3.json('/api/v1.0/restaurantes').then(data => {
         filteredData = filteredData.filter(obj => obj[key] == val);
         showData(filteredData);
     };
+
+    function handleClick() {
+        filteredData = data;
+        d3.selectAll('input').property('value', '');
+        showData(filteredData);
+    }
+
+
+    var salesChart = [
+        {
+            domain: { x: [0, 1], y: [0, 1] },
+            value: 450,
+            title: { text: "Average Sales" },
+            type: "indicator",
+            mode: "gauge+number",
+            delta: { reference: 400 },
+            gauge: { axis: { range: [0, d3.max(filteredData.map(obj=>obj.Sales))] } }
+        }
+    ];
+
+    Plotly.newPlot('sales', salesChart);
+
+
+    var checkChart = [
+        {
+            domain: { x: [0, 1], y: [0, 1] },
+            value: 450,
+            title: { text: "Average Check" },
+            type: "indicator",
+            mode: "gauge+number",
+            delta: { reference: 400 },
+            gauge: { axis: { range: [0, d3.max(filteredData.map(obj=>obj['Average Check']))] } }
+        }
+    ];
+
+    Plotly.newPlot('check', checkChart);
+
+
+    var mealChart = [
+        {
+            domain: { x: [0, 1], y: [0, 1] },
+            value: 450,
+            title: { text: "Total Meals" },
+            type: "indicator",
+            mode: "gauge+number",
+            delta: { reference: 400 },
+            gauge: { axis: { range: [0, d3.max(filteredData.map(obj=>obj['Meals Served']))] } }
+        }
+    ];
+
+    Plotly.newPlot('meals', mealChart);
+
+
+
+
 
 })
