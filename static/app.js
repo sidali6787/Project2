@@ -1,9 +1,12 @@
 d3.json('/api/v1.0/restaurantes').then(data => {
+
     showData(data);
     d3.selectAll('input').on('change', handleChange);
     d3.select('button').on('click', handleClick);
 
     var filteredData = data;
+
+    test = data;
 
     function showData(data) {
         d3.select('tbody').html('');
@@ -16,6 +19,53 @@ d3.json('/api/v1.0/restaurantes').then(data => {
             row.append('td').text(obj.Sales)
             row.append('td').text(obj['Average Check'])
         });
+
+        var checkChart = [
+            {
+                domain: { x: [0, 1], y: [0, 1] },
+                value: d3.mean(data.map(obj=>obj['Average Check'])),
+                title: { text: "Average Check" },
+                type: "indicator",
+                mode: "gauge+number",
+                delta: { reference: 400 },
+                gauge: { axis: { range: [0, d3.max(data.map(obj=>obj['Average Check']))] } }
+            }
+        ];
+        
+        var checkLayout = { margin: {t:75,b:25,l:0,r:0} };
+        Plotly.newPlot('check', checkChart, checkLayout);
+        
+        var salesChart = [
+            {
+                domain: { x: [0, 1], y: [0, 1] },
+                value: d3.mean(data.map(obj=>obj.Sales)),
+                title: { text: "Average Sales" },
+                type: "indicator",
+                mode: "gauge+number",
+                delta: { reference: 400 },
+                gauge: { axis: { range: [0, d3.max(data.map(obj=>obj.Sales))] } }
+            }
+        ];
+        
+        var salesLayout = { margin: {t:75,b:25,l:0,r:0} };
+        Plotly.newPlot('sales', salesChart, salesLayout);
+        
+        var mealChart = [
+            {
+                domain: { x: [0, 1], y: [0, 1] },
+                value: d3.mean(data.map(obj=>obj['Meals Served'])),
+                title: { text: "Total Meals" },
+                type: "indicator",
+                mode: "gauge+number",
+                delta: { reference: 400 },
+                gauge: { axis: { range: [0, d3.max(data.map(obj=>obj['Meals Served']))] } }
+            }
+        ];
+        
+        var mealsLayout = { margin: {t:75,b:25,l:0,r:0} };
+        Plotly.newPlot('meals', mealChart, mealsLayout);
+    
+
     };
 
     function handleChange() {
@@ -33,50 +83,7 @@ d3.json('/api/v1.0/restaurantes').then(data => {
     }
 
 
-    var salesChart = [
-        {
-            domain: { x: [0, 1], y: [0, 1] },
-            value: 450,
-            title: { text: "Average Sales" },
-            type: "indicator",
-            mode: "gauge+number",
-            delta: { reference: 400 },
-            gauge: { axis: { range: [0, d3.max(filteredData.map(obj=>obj.Sales))] } }
-        }
-    ];
-
-    Plotly.newPlot('sales', salesChart);
-
-
-    var checkChart = [
-        {
-            domain: { x: [0, 1], y: [0, 1] },
-            value: 450,
-            title: { text: "Average Check" },
-            type: "indicator",
-            mode: "gauge+number",
-            delta: { reference: 400 },
-            gauge: { axis: { range: [0, d3.max(filteredData.map(obj=>obj['Average Check']))] } }
-        }
-    ];
-
-    Plotly.newPlot('check', checkChart);
-
-
-    var mealChart = [
-        {
-            domain: { x: [0, 1], y: [0, 1] },
-            value: 450,
-            title: { text: "Total Meals" },
-            type: "indicator",
-            mode: "gauge+number",
-            delta: { reference: 400 },
-            gauge: { axis: { range: [0, d3.max(filteredData.map(obj=>obj['Meals Served']))] } }
-        }
-    ];
-
-    Plotly.newPlot('meals', mealChart);
-
+   
 
 
 
